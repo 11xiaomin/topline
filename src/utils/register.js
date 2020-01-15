@@ -7,7 +7,22 @@ import {
   Button,
   Icon,
   Toast,
-  CountDown } from 'vant'
+  CountDown,
+  Tabbar,
+  TabbarItem,
+  Image,
+  Grid,
+  GridItem,
+  Cell,
+  CellGroup,
+  Dialog,
+  List,
+  Tab,
+  Tabs,
+  PullRefresh,
+  Popup,
+  Search
+} from 'vant'
 // 注册
 Vue.use(NavBar)
   .use(Field)
@@ -15,3 +30,17 @@ Vue.use(NavBar)
   .use(Icon)
   .use(Toast)
   .use(CountDown)
+  .use(Tabbar)
+  .use(TabbarItem)
+  .use(Image)
+  .use(Grid)
+  .use(GridItem)
+  .use(Cell)
+  .use(CellGroup)
+  .use(Dialog)
+  .use(List)
+  .use(Tab)
+  .use(Tabs)
+  .use(PullRefresh)
+  .use(Popup)
+  .use(Search)

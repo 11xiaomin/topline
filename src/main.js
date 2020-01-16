@@ -9,6 +9,9 @@ import './utils/validation.js'
 import 'amfe-flexible'
 import './utils/register'
 import './styles/index.less'
+
+// 加载初始日期时间库
+import './utils/datetime'
 // // 加载
 // import { Button, Icon } from 'vant'
 // // 注册

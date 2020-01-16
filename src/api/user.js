@@ -34,3 +34,21 @@ export const getUserById = userId => {
     url: `/app/v1_0/users/${userId}`
   })
 }
+
+// 关注用户
+export const addFollow = usreId => {
+  return request({
+    method: 'POST',
+    url: '/app/v1_0/user/followings',
+    data: {
+      target: usreId
+    }
+  })
+}
+// 取消关注用户
+export const deleteFollow = usreId => {
+  return request({
+    method: 'DELETE',
+    url: `/app/v1_0/user/followings/${usreId}`
+  })
+}

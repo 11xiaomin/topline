@@ -21,7 +21,8 @@ import {
   Tabs,
   PullRefresh,
   Popup,
-  Search
+  Search,
+  Loading
 } from 'vant'
 // 注册
 Vue.use(NavBar)
@@ -44,3 +45,4 @@ Vue.use(NavBar)
   .use(PullRefresh)
   .use(Popup)
   .use(Search)
+  .use(Loading)

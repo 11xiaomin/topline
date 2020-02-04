@@ -22,7 +22,10 @@ import {
   PullRefresh,
   Popup,
   Search,
-  Loading
+  Loading,
+  ImagePreview,
+  ActionSheet,
+  DatetimePicker
 } from 'vant'
 // 注册
 Vue.use(NavBar)
@@ -46,3 +49,6 @@ Vue.use(NavBar)
   .use(Popup)
   .use(Search)
   .use(Loading)
+  .use(ImagePreview)
+  .use(ActionSheet)
+  .use(DatetimePicker)

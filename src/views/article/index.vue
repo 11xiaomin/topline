@@ -21,37 +21,76 @@
         </div>
         <!-- 如果用户没有登录或者文章作者不是当前登录用户 -->
         <!-- v-if="!$store.state.user||article.aut_id!==$store.state.user.id" -->
-        <van-button v-if="!user||article.aut_id!==user.id" class="follow-btn" :type="article.is_followed?'default':'info'" size="small" :loading="isFollowLoading" round @click='onFollow'>{{article.is_followed?'已关注':'+ 关注'}}</van-button>
+        <van-button
+          v-if="!user||article.aut_id!==user.id"
+          class="follow-btn"
+          :type="article.is_followed?'default':'info'"
+          size="small"
+          :loading="isFollowLoading"
+          round
+          @click="onFollow"
+        >{{article.is_followed?'已关注':'+ 关注'}}</van-button>
       </div>
+      <!-- 文章内容 -->
       <div class="markdown-body" v-html="article.content"></div>
+      <!-- 文章评论 -->
+      <article-comment ref='article-comment' :article-id="articleId" @click-reply="onReplyShow"></article-comment>
     </div>
     <!-- 文章详情 -->
     <!-- 加载失败提示 -->
     <div v-else class="error">
       <img src="./no-network.png" alt="no-network" />
       <p class="text">亲，网络不给力哦~</p>
-      <van-button class="btn" type="default" size="small" @click='loadArticle'>点击重试</van-button>
+      <van-button class="btn" type="default" size="small" @click="loadArticle">点击重试</van-button>
     </div>
     <!-- /加载失败提示 -->
     <!-- 底部区域 -->
     <div class="footer">
-      <van-button class="write-btn" type="default" round size="small">写评论</van-button>
+      <van-button class="write-btn" type="default" round size="small" @click="isPostShow=true">写评论</van-button>
       <van-icon class="comment-icon" name="comment-o" info="9" />
-      <van-icon color="orange" :name="article.is_collected?'star':'star-o'" @click='onCollect'/>
-      <van-icon color="#e5645f" :name="article.attitude===1?'good-job':'good-job-o'" @click='onLike'/>
+      <van-icon color="orange" :name="article.is_collected?'star':'star-o'" @click="onCollect" />
+      <van-icon
+        color="#e5645f"
+        :name="article.attitude===1?'good-job':'good-job-o'"
+        @click="onLike"
+      />
       <van-icon class="share-icon" name="share" />
     </div>
     <!-- /底部区域 -->
+    <!-- 发布文章评论 -->
+    <van-popup v-model="isPostShow" position="bottom" :style="{ height: '20%' }">
+      <post-comment v-model="postMessage" @click-post="onPost"></post-comment>
+    </van-popup>
+    <!-- 评论回复 -->
+    <van-popup v-model="isReplyShow" position="bottom" :style="{ height: '80%' }">
+      <comment-reply :comment='currentComment' :article-id="articleId"/>
+      <!-- <post-comment v-model="postMessage" @click-post="onPost"></post-comment> -->
+    </van-popup>
   </div>
 </template>
 <script>
-import { getArticleId, addCollect, deleteCollect, addLike, deleteLike } from '@/api/article'
+import {
+  getArticleId,
+  addCollect,
+  deleteCollect,
+  addLike,
+  deleteLike
+} from '@/api/article'
 import { addFollow, deleteFollow } from '@/api/user'
+import ArticleComment from './compontent/article-comments'
+import PostComment from './compontent/post-comment'
+import CommentReply from './compontent/comment-reply'
 // vuex中提供的辅助方法
 import { mapState } from 'vuex'
+import { addComment } from '@/api/comment'
+
 export default {
   name: 'ArticlePage',
-  components: {},
+  components: {
+    ArticleComment,
+    PostComment,
+    CommentReply
+  },
   props: {
     articleId: {
       type: String,
@@ -62,7 +101,11 @@ export default {
     return {
       article: {}, // 文章详情
       loading: true,
-      isFollowLoading: false // 关注按钮的loading状态
+      isFollowLoading: false, // 关注按钮的loading状态
+      isPostShow: false, // 发布评论的弹层是否显示
+      postMessage: '', // 发布评论内容
+      isReplyShow: false, // 展示评论回复弹层
+      currentComment: {}// 点击回复的那个评论项
     }
   },
   // 在第8天视频第6中
@@ -154,6 +197,37 @@ export default {
         this.$toast.fail('操作失败')
       }
       this.isFollowLoading = false
+    },
+    async onPost () {
+      this.$toast.loading({
+        duration: 0, // 持续展示toast
+        message: '发布中...',
+        forbidClick: true // 是否禁止背景点击
+      })
+      try {
+        const { data } = await addComment({
+          target: this.articleId,
+          content: this.postMessage
+          //     // art_id://对文章进行评论，不要传此参数。
+        })
+        console.log(data)
+        // 清空文本框
+        this.postMessage = ''
+        // 关闭弹层
+        this.isPostShow = false
+        // 将数据添加到列表中
+        this.$refs['article-comment'].list.unshift(data.data.new_obj)
+        this.$toast.success('发布成功')
+      } catch (error) {
+        console.log(error)
+        this.$toast.fail('发布失败')
+      }
+    },
+    onReplyShow (comment) {
+      // 将点击回复所在的评论对象记录起来
+      this.currentComment = comment
+      // 展示回复的弹层
+      this.isReplyShow = true
     }
   }
 }

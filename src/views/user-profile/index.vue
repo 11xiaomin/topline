@@ -2,13 +2,19 @@
   <div class="user-profile">
     <van-nav-bar title="编辑资料" left-arrow @click-left="$router.back()" />
     <van-cell-group>
+
       <van-cell is-link title="头像" @click="onSelectFile">
-        <van-image class="avatar" round :src="user.photo" />
+        <van-image class="avatar" round :src="user.photo"  />
       </van-cell>
+
       <input type="file" hidden ref="file" @change="onFileChange" />
+
       <van-cell is-link title="昵称" :value="user.name" @click="isEditNameShow=true" />
+
       <van-cell is-link title="介绍" value="内容" />
+
       <van-cell is-link title="性别" :value="user.gender===0?'女':'男'" @click="isEditGenderShow=true" />
+
       <van-cell is-link title="生日" :value="user.birthday" @click="isEditBirthdayShow=true"/>
     </van-cell-group>
 
@@ -34,7 +40,7 @@
       <div>
         <van-field
           :value="user.name"
-          @input="inputName=$event"
+          @input="inputName = $event"
           rows="2"
           autosize
           type="textarea"
@@ -129,7 +135,8 @@ export default {
       const fileObj = this.file.files[0]
       // 使用window.URL.createObjectURL(file)得到文件数据
       const fileData = URL.createObjectURL(fileObj)
-      this.images = [fileData] // 这里直接重置数据，防止出现多个预览图片
+      this.images = []
+      this.images.push(fileData)// 这里直接重置数据，防止出现多个预览图片
       this.isPreviewShow = true
       // ImagePreview({
       //   images: [fileData], // 预览的图片列表
@@ -190,6 +197,7 @@ export default {
     //   }
     // field:要修改的数据字段
     // value：数据值
+    // 封装修改
     async updateUserProfile (field, value) {
       this.$toast.loading({
         duration: 0, // 持续展示toast
@@ -201,12 +209,13 @@ export default {
         await updateUserProfile({
           [field]: value // 注意属性名使用中括号包裹，否则会当做字符串来使用而不是变量
         })
-        this.$toast.fail('更新成功')
+        this.$toast.success('更新成功')
       } catch (error) {
         console.log(error)
         this.$toast.fail('更新失败')
       }
     },
+    // 昵称修改
     async onUpdataName () {
       // 请求提交表单
       await this.updateUserProfile('name', this.inputName)
@@ -215,6 +224,7 @@ export default {
       // 关闭弹层
       this.isEditNameShow = false
     },
+    // 性别修改
     async onGenderSelect (data) {
       await this.updateUserProfile('gender', data.value)
       // 更新视图
@@ -222,6 +232,7 @@ export default {
       // 关闭上拉菜单
       this.isEditGenderShow = false
     },
+    // 修改生日
     async onUpdateBirthday (value) {
       // 使用moment把日期对象格式化为指定格式的字符串
       const date = moment(value).format('YYYY-MM-DD')

@@ -119,7 +119,7 @@ export default {
       // console.log(searchContent)
       const reg = new RegExp(searchContent, 'gi')
       return str.replace(
-        searchContent,
+        reg,
         `<span style="color:#3296fa">${searchContent}</span>`
       )
     },

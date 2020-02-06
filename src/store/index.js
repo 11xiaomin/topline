@@ -10,7 +10,8 @@ export default new Vuex.Store({
   state: {
     // {token,refresh_token}
     // user: JSON.parse(window.localStorage.getItem('user'))// 当前登录用户状态（token）
-    user: getItem(KEY)
+    user: getItem(KEY),
+    cachePages: ['TabBar']
   },
   mutations: {
     setUser (state, data) {
@@ -23,6 +24,19 @@ export default new Vuex.Store({
       // 为了避免页面刷新数据丢失，我们这里使用本地存储进行持久化
       // window.localStorage.setItem('user', JSON.stringify(state.user))
       setItem(KEY, state.user)
+    },
+    // 添加缓存页面
+    addCachePage (state, name) {
+      if (!state.cachePages.includes(name)) {
+        state.cachePages.push(name)
+      }
+    },
+    // 移除缓存页面
+    removeCachePage (state, name) {
+      const index = state.cachePages.indexOf(name)
+      if (index !== -1) {
+        state.cachePages.splice(index)
+      }
     }
   },
   actions: {

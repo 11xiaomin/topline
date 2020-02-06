@@ -2,8 +2,8 @@
   <div class="my-container">
     <!-- 已登录：用户信息 -->
     <div class="user-info-wrap" v-if="$store.state.user">
-      <div class="base-info-wrap" @click="$router.push('/user/'+user.id)">
-        <div class="avatar-title-wrap">
+      <div class="base-info-wrap" >
+        <div class="avatar-title-wrap" @click="$router.push('/user/'+user.id)">
           <van-image class="avatar" round fit="cover" :src="user.photo" />
           <div class="title">黑马程序员</div>
         </div>
@@ -39,20 +39,21 @@
 
     <!-- 其它 -->
     <van-grid clickable :column-num="3">
-      <van-grid-item text="我的收藏">
+      <van-grid-item text="我的收藏" to="/my-article/collect">
         <van-icon slot="icon" name="star-o" color="#eb5253" />
       </van-grid-item>
-      <van-grid-item text="浏览历史">
+      <van-grid-item text="浏览历史" to="/my-article/history">
         <van-icon slot="icon" name="browsing-history-o" color="#ffa023" />
       </van-grid-item>
-      <van-grid-item text="作品">
+      <van-grid-item text="作品"
+      to="/my-article">
         <van-icon slot="icon" name="edit" color="#678eff" />
       </van-grid-item>
     </van-grid>
 
     <van-cell-group :border="false">
       <van-cell title="消息通知" is-link />
-      <van-cell title="小智同学" is-link />
+      <van-cell title="小智同学" is-link  @click="$router.push('/user/chat')"/>
     </van-cell-group>
 
     <van-cell-group v-if="$store.state.user">

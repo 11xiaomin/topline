@@ -121,6 +121,7 @@ export default {
   // },
   watch: {},
   created () {
+    // console.log('article created')
     this.loadArticle()
   },
   mounted () {},

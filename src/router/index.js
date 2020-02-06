@@ -44,6 +44,11 @@ const routes = [
     component: () => import('@/views/user-profile')
   },
   {
+    path: '/user/chat',
+    name: 'user-chat',
+    component: () => import('@/views/user-chat')
+  },
+  {
     path: '/user/:userId',
     name: 'user',
     component: () => import('@/views/user')
@@ -59,7 +64,26 @@ const routes = [
     component: () => import('@/views/article'),
     // 将路由动态参数映射到组件的props中
     props: true
+  },
+  {
+    // 我的作品
+    path: '/my-article/:type?',
+    name: 'my-article',
+    component: () => import('@/views/user-articles'),
+    props: true
   }
+  // {
+  //   // 我的收藏
+  //   path: '/my-article/collect',
+  //   name: 'my-article-collect',
+  //   component: () => import('@/views/user-articles')
+  // },
+  // {
+  //   // 我的历史
+  //   path: '/my-article/history',
+  //   name: 'my-article-history',
+  //   component: () => import('@/views/user-articles')
+  // }
 ]
 
 const router = new VueRouter({
